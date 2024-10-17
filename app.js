@@ -7,7 +7,7 @@ const cors = require("cors");
 const routes = require("./routes/index"); //  /index is optional
 
 //  Connect to database
-mongoose.connect("mongodb:// 127.0.0.1:27017/wtwr_db");
+mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
 //  Create express server in app variable
 const app = express();

@@ -5,7 +5,7 @@ module.exports.getAllUsers = (req, res) => {
   user
     .find({})
     .then((data) => {
-      res.send({ data: data });
+      res.send({ data });
     })
     .catch((err) => {
       returnError(err, res);
@@ -17,7 +17,7 @@ module.exports.getUserById = (req, res) => {
     .findById(req.params.userId)
     .orFail()
     .then((data) => {
-      res.send({ data: data });
+      res.send({ data });
     })
     .catch((err) => {
       returnError(err, res);
@@ -29,7 +29,7 @@ module.exports.createUser = (req, res) => {
   user
     .create({ name, avatar })
     .then((data) => {
-      res.send({ data: data });
+      res.send({ data });
     })
     .catch((err) => {
       returnError(err, res);
