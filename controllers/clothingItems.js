@@ -7,8 +7,8 @@ module.exports.getItems = (req, res) => {
     .then((data) => {
       res.send({ data: data });
     })
-    .catch((err, res) => {
-      returnError(err);
+    .catch((err) => {
+      returnError(err, res);
     });
 };
 
