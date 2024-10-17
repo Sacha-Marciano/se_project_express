@@ -1,6 +1,8 @@
+// Import schema and error checking function
 const clothingItems = require("../models/clothingItems");
 const { returnError } = require("../utils/errors");
 
+// Return all items from clothingItems collection in database
 module.exports.getItems = (req, res) => {
   clothingItems
     .find({})
@@ -12,6 +14,7 @@ module.exports.getItems = (req, res) => {
     });
 };
 
+// Add item (request body) to the collection
 module.exports.createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
@@ -26,6 +29,7 @@ module.exports.createItem = (req, res) => {
     });
 };
 
+// Finds item's ID in request (.../items/:itemId) and removes from collection
 module.exports.deleteItemById = (req, res) => {
   clothingItems
     .findByIdAndRemove(req.params.itemId)
@@ -38,6 +42,7 @@ module.exports.deleteItemById = (req, res) => {
     });
 };
 
+// Add user's ID to likes array of specified item's ID
 module.exports.likeItemById = (req, res) => {
   clothingItems
     .findByIdAndUpdate(
@@ -54,6 +59,7 @@ module.exports.likeItemById = (req, res) => {
     });
 };
 
+// Remove user's ID to likes array of specified item's ID
 module.exports.dislikeItemById = (req, res) => {
   clothingItems
     .findByIdAndUpdate(
