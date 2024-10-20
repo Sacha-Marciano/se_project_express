@@ -5,6 +5,10 @@ const { returnError } = require("../utils/errors");
 // Import hash encryption
 const bcrypt = require("bcryptjs");
 
+// Import token generator and signature key
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../utils/config");
+
 // Return all items from Users collection in database
 module.exports.getAllUsers = (req, res) => {
   users
@@ -34,7 +38,7 @@ module.exports.getUserById = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, avatar, email } = req.body;
   bcrypt
-    .hash(req.body.password, 14)
+    .hash(req.body.password, 10)
     .then((hash) => users.create({ name, avatar, email, password: hash }))
     .then((user) => {
       res.status(201).send({
@@ -51,4 +55,12 @@ module.exports.createUser = (req, res) => {
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
+  users
+    .findUserByCredentials(email, password)
+    .then((user) => {
+      res.send({ token: jwt.sign({ _id: user.id }, JWT_SECRET) });
+    })
+    .catch((err) => {
+      returnError(err, res);
+    });
 };
