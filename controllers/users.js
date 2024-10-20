@@ -1,13 +1,13 @@
-// Import schema and error checking function
-const users = require("../models/users");
-const { returnError, BAD_REQUEST } = require("../utils/errors");
-
 // Import hash encryption
 const bcrypt = require("bcryptjs");
 
 // Import token handler and signature key
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
+
+// Import schema and error checking function
+const users = require("../models/users");
+const { returnError, BAD_REQUEST } = require("../utils/errors");
 
 // Add new user (request body) to users collection
 module.exports.createUser = (req, res) => {
@@ -35,7 +35,7 @@ module.exports.login = (req, res) => {
       .status(BAD_REQUEST)
       .send({ message: "Email and password are required" });
   }
-  users
+  return users
     .findUserByCredentials(email, password)
     .then((user) => {
       res.send({ token: jwt.sign({ _id: user.id }, JWT_SECRET) });
@@ -52,7 +52,7 @@ module.exports.getCurrentUser = (req, res) => {
       res.send({ user });
     })
     .catch((err) => {
-      console.log("sacha");
+      returnError(err, res);
     });
 };
 
@@ -61,7 +61,7 @@ module.exports.updateCurrentUser = (req, res) => {
   users
     .findByIdAndUpdate(
       req.user._id,
-      { name: name, avatar: avatar },
+      { name, avatar },
       { new: true, runValidators: true },
     )
     .orFail()

@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const clothingItems = require("../models/clothingItems");
 const { returnError, UNAUTHORIZED, BAD_REQUEST } = require("../utils/errors");
 
-//Import regex for ID validation
+// Import regex for ID validation
 const { idRegex } = require("../utils/config");
 
 // Return all items from clothingItems collection in database
@@ -40,7 +40,7 @@ module.exports.deleteItemById = (req, res) => {
   if (!idRegex.test(req.params.itemId)) {
     return res.status(BAD_REQUEST).send({ message: "Please enter a valid ID" });
   }
-  clothingItems
+  return clothingItems
     .findById(req.params.itemId)
     .orFail()
     .then((item) => {
@@ -50,7 +50,7 @@ module.exports.deleteItemById = (req, res) => {
         return res.status(UNAUTHORIZED).send({ message: "Not allowed" });
       }
 
-      clothingItems
+      return clothingItems
         .findByIdAndRemove(req.params.itemId)
         .orFail()
         .then((data) => {
