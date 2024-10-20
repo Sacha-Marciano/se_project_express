@@ -9,30 +9,30 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
 
-// Return all items from Users collection in database
-module.exports.getAllUsers = (req, res) => {
-  users
-    .find({})
-    .then((data) => {
-      res.send({ data });
-    })
-    .catch((err) => {
-      returnError(err, res);
-    });
-};
+// // Return all items from Users collection in database
+// module.exports.getAllUsers = (req, res) => {
+//   users
+//     .find({})
+//     .then((data) => {
+//       res.send({ data });
+//     })
+//     .catch((err) => {
+//       returnError(err, res);
+//     });
+// };
 
-// Finds user's ID in request (.../users/:userId) and sends it as response
-module.exports.getUserById = (req, res) => {
-  users
-    .findById(req.params.userId)
-    .orFail()
-    .then((data) => {
-      res.send({ data });
-    })
-    .catch((err) => {
-      returnError(err, res);
-    });
-};
+// // Finds user's ID in request (.../users/:userId) and sends it as response
+// module.exports.getUserById = (req, res) => {
+//   users
+//     .findById(req.params.userId)
+//     .orFail()
+//     .then((data) => {
+//       res.send({ data });
+//     })
+//     .catch((err) => {
+//       returnError(err, res);
+//     });
+// };
 
 // Add new user (request body) to users collection
 module.exports.createUser = (req, res) => {

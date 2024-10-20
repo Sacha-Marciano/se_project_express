@@ -11,7 +11,8 @@ const { NOT_FOUND } = require("../utils/errors");
 // For known endpoints
 router.use("/users", userRouter);
 router.use("/items", clothingItemsRouter);
-
+router.use("/signin", userRouter);
+router.use("/signup", userRouter);
 // For unknown routes
 router.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Bad route request" });
