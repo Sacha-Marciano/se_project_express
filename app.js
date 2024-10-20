@@ -18,12 +18,6 @@ const app = express();
 //  App's logic
 app.use(cors()); //  All origins are allowed for tests.
 app.use(express.json()); //  Convert request to JSON
-app.use((req, res, next) => {
-  req.user = {
-    _id: "6711549c52d8272ad991a9a7",
-  };
-  next();
-}); // Add an hardcoded user's ID to all requests
 app.use("/", routes); // Connect request to the righ endpoint
 
 // Configure default port value and activate listening

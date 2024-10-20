@@ -2,15 +2,20 @@
 const router = require("express").Router();
 
 // Import specific routers
-const userRouter = require("./users");
 const clothingItemsRouter = require("./clothingItems");
+const usersRouter = require("./users");
+
+// Import controllers for signin/up
+const { login, createUser } = require("../controllers/users");
 
 // Import 404 error
 const { NOT_FOUND } = require("../utils/errors");
 
 // For known endpoints
-router.use("/", userRouter);
+router.post("/signin", login);
+router.post("/signup", createUser);
 router.use("/items", clothingItemsRouter);
+router.use("/users", usersRouter);
 
 // For unknown routes
 router.use((req, res) => {

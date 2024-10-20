@@ -39,3 +39,32 @@ module.exports.login = (req, res) => {
       returnError(err, res);
     });
 };
+
+module.exports.getCurrentUser = (req, res) => {
+  users
+    .findById(req.user._id)
+    .orFail()
+    .then((user) => {
+      res.send({ user });
+    })
+    .catch((err) => {
+      returnError(err, res);
+    });
+};
+
+module.exports.updateCurrentUser = (req, res) => {
+  const { name, avatar } = req.body;
+  users
+    .findByIdAndUpdate(
+      req.user._id,
+      { name: name, avatar: avatar },
+      { new: true, runValidators: true },
+    )
+    .orFail()
+    .then((newUser) => {
+      res.send({ newUser });
+    })
+    .catch((err) => {
+      returnError(err, res);
+    });
+};
