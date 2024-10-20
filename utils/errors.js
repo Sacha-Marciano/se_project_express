@@ -23,4 +23,4 @@ const returnError = (err, res) => {
     .send({ message: "An error has occurred on the server." });
 };
 
-module.exports = { returnError, NOT_FOUND };
+module.exports = { returnError, NOT_FOUND, WRONG_CREDENTIALS };
