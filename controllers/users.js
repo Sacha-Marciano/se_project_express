@@ -1,6 +1,6 @@
 // Import schema and error checking function
 const users = require("../models/users");
-const { returnError } = require("../utils/errors");
+const { returnError, BAD_REQUEST } = require("../utils/errors");
 
 // Import hash encryption
 const bcrypt = require("bcryptjs");
@@ -30,6 +30,11 @@ module.exports.createUser = (req, res) => {
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST)
+      .send({ message: "Email and password are required" });
+  }
   users
     .findUserByCredentials(email, password)
     .then((user) => {
@@ -43,12 +48,11 @@ module.exports.login = (req, res) => {
 module.exports.getCurrentUser = (req, res) => {
   users
     .findById(req.user._id)
-    .orFail()
     .then((user) => {
       res.send({ user });
     })
     .catch((err) => {
-      returnError(err, res);
+      console.log("sacha");
     });
 };
 

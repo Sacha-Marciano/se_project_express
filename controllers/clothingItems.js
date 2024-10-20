@@ -1,6 +1,12 @@
+// Import mongoose for ObjectId
+const mongoose = require("mongoose");
+
 // Import schema and error checking function
 const clothingItems = require("../models/clothingItems");
-const { returnError } = require("../utils/errors");
+const { returnError, UNAUTHORIZED, BAD_REQUEST } = require("../utils/errors");
+
+//Import regex for ID validation
+const { idRegex } = require("../utils/config");
 
 // Return all items from clothingItems collection in database
 module.exports.getItems = (req, res) => {
@@ -29,13 +35,27 @@ module.exports.createItem = (req, res) => {
     });
 };
 
-// Finds item's ID in request (.../items/:itemId) and removes from collection
+// Finds item's ID in request (.../items/:itemId) and removes from collection depending on owner ID
 module.exports.deleteItemById = (req, res) => {
+  if (!idRegex.test(req.params.itemId)) {
+    return res.status(BAD_REQUEST).send({ message: "Please enter a valid ID" });
+  }
   clothingItems
-    .findByIdAndRemove(req.params.itemId)
+    .findById(req.params.itemId)
     .orFail()
-    .then((data) => {
-      res.send({ data });
+    .then((item) => {
+      const userId = JSON.stringify(new mongoose.Types.ObjectId(req.user._id));
+      const ownerId = JSON.stringify(item.owner);
+      if (ownerId !== userId) {
+        return res.status(UNAUTHORIZED).send({ message: "Not allowed" });
+      }
+
+      clothingItems
+        .findByIdAndRemove(req.params.itemId)
+        .orFail()
+        .then((data) => {
+          res.send({ data });
+        });
     })
     .catch((err) => {
       returnError(err, res);
