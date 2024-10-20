@@ -1,6 +1,7 @@
 const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const INTERNAL_ERROR = 500;
+const DUPLICATE_ERROR = 11000;
 
 const returnError = (err, res) => {
   console.error(err.name);
@@ -9,6 +10,9 @@ const returnError = (err, res) => {
   }
   if (err.name === "DocumentNotFoundError") {
     return res.status(`${NOT_FOUND}`).send({ message: err.message });
+  }
+  if (err.code === DUPLICATE_ERROR) {
+    return res.status(`${DUPLICATE_ERROR}`).send({ message: err.message });
   }
   return res
     .status(INTERNAL_ERROR)
