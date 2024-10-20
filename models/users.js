@@ -1,3 +1,4 @@
+const { type } = require("express/lib/response");
 const mongoose = require("mongoose");
 const validator = require("validator");
 
@@ -17,6 +18,21 @@ const userSchema = new mongoose.Schema({
       },
       message: "You must enter a valid URL",
     },
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+    validate: {
+      validator: (input) => {
+        isEmail(input);
+      },
+      message: "You must enter a valid email",
+    },
+  },
+  password: {
+    type: String,
+    required: true,
   },
 });
 
