@@ -16,7 +16,7 @@ const returnError = (err, res) => {
   if (err.name === "MongoServerError") {
     return res.status(`${DUPLICATE_ERROR}`).send({ message: err.message });
   }
-  if (err.message === "Incorrect email or password") {
+  if (err.message == "Incorrect password or email") {
     return res.status(`${WRONG_CREDENTIALS}`).send({ message: err.message });
   }
   return res
