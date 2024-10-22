@@ -13,7 +13,7 @@ module.exports.getItems = (req, res) => {
   clothingItems
     .find({})
     .then((data) => {
-      res.send({ data });
+      res.send(data);
     })
     .catch((err) => {
       returnError(err, res);
@@ -28,7 +28,7 @@ module.exports.createItem = (req, res) => {
   clothingItems
     .create({ name, weather, imageUrl, owner })
     .then((data) => {
-      res.send({ data });
+      res.send(data);
     })
     .catch((err) => {
       returnError(err, res);
@@ -54,7 +54,7 @@ module.exports.deleteItemById = (req, res) => {
         .findByIdAndRemove(req.params.itemId)
         .orFail()
         .then((data) => {
-          res.send({ data });
+          res.send(data);
         });
     })
     .catch((err) => {
@@ -72,7 +72,7 @@ module.exports.likeItemById = (req, res) => {
     )
     .orFail()
     .then((data) => {
-      res.send({ data });
+      res.send(data);
     })
     .catch((err) => {
       returnError(err, res);
@@ -89,7 +89,7 @@ module.exports.dislikeItemById = (req, res) => {
     )
     .orFail()
     .then((data) => {
-      res.send({ data });
+      res.send(data);
     })
     .catch((err) => {
       returnError(err, res);

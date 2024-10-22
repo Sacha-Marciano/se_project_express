@@ -5,7 +5,7 @@ const { WRONG_CREDENTIALS } = require("../utils/errors");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-  if (!authorization || !authorization.startsWith("Bearer ")) {
+  if (authorization === "Bearer null" || !authorization.startsWith("Bearer ")) {
     return res
       .status(WRONG_CREDENTIALS)
       .send({ message: "Authorization error" });

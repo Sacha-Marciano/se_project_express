@@ -51,7 +51,7 @@ module.exports.getCurrentUser = (req, res) => {
   users
     .findById(req.user._id)
     .then((user) => {
-      res.send({ user });
+      res.send(user);
     })
     .catch((err) => {
       returnError(err, res);
@@ -68,7 +68,7 @@ module.exports.updateCurrentUser = (req, res) => {
     )
     .orFail()
     .then((newUser) => {
-      res.send({ newUser });
+      res.send(newUser);
     })
     .catch((err) => {
       returnError(err, res);
