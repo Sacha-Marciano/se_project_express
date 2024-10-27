@@ -3,13 +3,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+// Import middleware
+const { errors } = require("celebrate");
+const errorHandler = require("./middlewares/error-handler");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
+
 //  Import routes index
 const routes = require("./routes/index"); //  /index is optional
-
-// Import middleware
-const errorHandler = require("./middlewares/error-handler");
-const { errors } = require("celebrate");
-const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 //  Connect to database
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
