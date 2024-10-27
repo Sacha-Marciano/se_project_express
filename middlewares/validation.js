@@ -15,7 +15,7 @@ const validateEmail = (value, helpers) => {
   return helpers.error("string.email");
 };
 
-module.exports.validateItemBody = celebrate({
+module.exports.validateCreateItem = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30).messages({
       "string.min": 'The minimum length of the "name" field is 2',
@@ -29,7 +29,7 @@ module.exports.validateItemBody = celebrate({
   }),
 });
 
-module.exports.validateUserBody = celebrate({
+module.exports.validateCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30).messages({
       "string.min": 'The minimum length of the "name" field is 2',
@@ -62,8 +62,8 @@ module.exports.validateLoginBody = celebrate({
   }),
 });
 
-module.exports.validateID = celebrate({
+module.exports.validateItemId = celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().required().hex().length(24),
+    itemId: Joi.string().required().hex().length(24),
   }),
 });

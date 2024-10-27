@@ -1,8 +1,13 @@
 const router = require("express").Router();
 
-// Import authentication middleware
+// Import middlewares
 const auth = require("../middlewares/auth");
+const {
+  validateCreateItem,
+  validateItemId,
+} = require("../middlewares/validation");
 
+// Import controllers
 const {
   getItems,
   createItem,
@@ -14,11 +19,11 @@ const {
 router.get("/", getItems);
 
 router.use(auth);
-router.post("/", createItem);
+router.post("/", validateCreateItem, createItem);
 
-router.delete("/:itemId", deleteItemById);
+router.delete("/:itemId", validateItemId, deleteItemById);
 
-router.put("/:itemId/likes", likeItemById);
-router.delete("/:itemId/likes", dislikeItemById);
+router.put("/:itemId/likes", validateItemId, likeItemById);
+router.delete("/:itemId/likes", validateItemId, dislikeItemById);
 
 module.exports = router;

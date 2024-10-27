@@ -11,9 +11,15 @@ const { login, createUser } = require("../controllers/users");
 // Import 404 error
 const NotFoundError = require("../utils/errors/NotFoundError");
 
+// Import middlewares
+const {
+  validateLogin,
+  validateCreateUser,
+} = require("../middlewares/validation");
+
 // For known endpoints
-router.post("/signin", login);
-router.post("/signup", createUser);
+router.post("/signin", validateLogin, login);
+router.post("/signup", validateCreateUser, createUser);
 router.use("/items", clothingItemsRouter);
 router.use("/users", usersRouter);
 
