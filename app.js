@@ -9,6 +9,7 @@ const routes = require("./routes/index"); //  /index is optional
 // Import middleware
 const errorHandler = require("./middlewares/error-handler");
 const { errors } = require("celebrate");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 //  Connect to database
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
@@ -22,7 +23,9 @@ const app = express();
 //  App's logic
 app.use(cors()); //  All origins are allowed for tests.
 app.use(express.json()); //  Convert request to JSON
+app.use(requestLogger); // Log all requests to request.log
 app.use("/", routes); // Connect request to the righ endpoint
+app.use(errorLogger); // Log all errors to error.log
 app.use(errors()); // Use celebrate error handling
 app.use(errorHandler); // Generalized error handling
 
