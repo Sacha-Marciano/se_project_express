@@ -1,14 +1,14 @@
 // Import token handler and key signature
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
-const { WRONG_CREDENTIALS } = require("../utils/errors");
+
+// Import customized error
+const UnauthorizedError = require("../utils/errors/UnauthorizedError");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (authorization === "Bearer null" || !authorization.startsWith("Bearer ")) {
-    return res
-      .status(WRONG_CREDENTIALS)
-      .send({ message: "Authorization error" });
+    throw new UnauthorizedError("User isn't logged in");
   }
 
   const token = authorization.replace("Bearer ", "");
@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return res.status(WRONG_CREDENTIALS).send({ message: err.message });
+    throw new UnauthorizedError("Invalid toker");
   }
 
   req.user = payload;

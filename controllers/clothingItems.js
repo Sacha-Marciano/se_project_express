@@ -1,27 +1,27 @@
 // Import mongoose for ObjectId
 const mongoose = require("mongoose");
 
-// Import schema and error checking function
+// Import schema and customized errors
 const clothingItems = require("../models/clothingItems");
-const { returnError, UNAUTHORIZED, BAD_REQUEST } = require("../utils/errors");
+const BadRequestError = require("../utils/errors/BadRequestError");
+const ForbiddenError = require("../utils/errors/ForbiddenError");
+const NotFoundError = require("../utils/errors/NotFoundError");
 
 // Import regex for ID validation
 const { idRegex } = require("../utils/config");
 
 // Return all items from clothingItems collection in database
-module.exports.getItems = (req, res) => {
+module.exports.getItems = (req, res, next) => {
   clothingItems
     .find({})
     .then((data) => {
       res.send(data);
     })
-    .catch((err) => {
-      returnError(err, res);
-    });
+    .catch(next);
 };
 
 // Add item (request body) to the collection
-module.exports.createItem = (req, res) => {
+module.exports.createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
@@ -31,14 +31,18 @@ module.exports.createItem = (req, res) => {
       res.send(data);
     })
     .catch((err) => {
-      returnError(err, res);
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Data is not valid"));
+      } else {
+        next(err);
+      }
     });
 };
 
 // Finds item's ID in request (.../items/:itemId) and removes from collection depending on owner ID
-module.exports.deleteItemById = (req, res) => {
+module.exports.deleteItemById = (req, res, next) => {
   if (!idRegex.test(req.params.itemId)) {
-    return res.status(BAD_REQUEST).send({ message: "Please enter a valid ID" });
+    throw new BadRequestError("Invalid ID");
   }
   return clothingItems
     .findById(req.params.itemId)
@@ -47,7 +51,7 @@ module.exports.deleteItemById = (req, res) => {
       const userId = JSON.stringify(new mongoose.Types.ObjectId(req.user._id));
       const ownerId = JSON.stringify(item.owner);
       if (ownerId !== userId) {
-        return res.status(UNAUTHORIZED).send({ message: "Not allowed" });
+        throw new ForbiddenError("This user is not the owner of the item");
       }
 
       return clothingItems
@@ -58,12 +62,18 @@ module.exports.deleteItemById = (req, res) => {
         });
     })
     .catch((err) => {
-      returnError(err, res);
+      if (err.name === "DocumentNotFoundError") {
+        next(new NotFoundError("Data not found"));
+      } else if (err.name === "CastError") {
+        next(new BadRequestError("Invalid data"));
+      } else {
+        next(err);
+      }
     });
 };
 
 // Add user's ID to likes array of specified item's ID
-module.exports.likeItemById = (req, res) => {
+module.exports.likeItemById = (req, res, next) => {
   clothingItems
     .findByIdAndUpdate(
       req.params.itemId,
@@ -75,12 +85,18 @@ module.exports.likeItemById = (req, res) => {
       res.send(data);
     })
     .catch((err) => {
-      returnError(err, res);
+      if (err.name === "DocumentNotFoundError") {
+        next(new NotFoundError("Data not found"));
+      } else if (err.name === "CastError") {
+        next(new BadRequestError("Invalid data"));
+      } else {
+        next(err);
+      }
     });
 };
 
 // Remove user's ID to likes array of specified item's ID
-module.exports.dislikeItemById = (req, res) => {
+module.exports.dislikeItemById = (req, res, next) => {
   clothingItems
     .findByIdAndUpdate(
       req.params.itemId,
@@ -92,6 +108,12 @@ module.exports.dislikeItemById = (req, res) => {
       res.send(data);
     })
     .catch((err) => {
-      returnError(err, res);
+      if (err.name === "DocumentNotFoundError") {
+        next(new NotFoundError("Data not found"));
+      } else if (err.name === "CastError") {
+        next(new BadRequestError("Invalid data"));
+      } else {
+        next(err);
+      }
     });
 };

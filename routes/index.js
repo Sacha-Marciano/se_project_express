@@ -9,7 +9,7 @@ const usersRouter = require("./users");
 const { login, createUser } = require("../controllers/users");
 
 // Import 404 error
-const { NOT_FOUND } = require("../utils/errors");
+const NotFoundError = require("../utils/errors/NotFoundError");
 
 // For known endpoints
 router.post("/signin", login);
@@ -18,8 +18,9 @@ router.use("/items", clothingItemsRouter);
 router.use("/users", usersRouter);
 
 // For unknown routes
-router.use((req, res) => {
-  res.status(NOT_FOUND).send({ message: "Bad route request" });
+router.use((req, res, next) => {
+  console.log(req);
+  next(new NotFoundError("Invalid route"));
 });
 
 module.exports = router;
