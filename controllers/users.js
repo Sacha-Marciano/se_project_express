@@ -67,7 +67,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError("Data not found"));
-      } else if (err.name === "CastError") {
+      } else if (err.name === "CastError" || err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else {
         next(err);
@@ -88,7 +88,7 @@ module.exports.updateCurrentUser = (req, res, next) => {
       res.send(newUser);
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === "CastError" || err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError("Data not found"));

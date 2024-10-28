@@ -64,7 +64,7 @@ module.exports.deleteItemById = (req, res, next) => {
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError("Data not found"));
-      } else if (err.name === "CastError") {
+      } else if (err.name === "CastError" || err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else {
         next(err);
@@ -87,7 +87,7 @@ module.exports.likeItemById = (req, res, next) => {
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError("Data not found"));
-      } else if (err.name === "CastError") {
+      } else if (err.name === "CastError" || err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else {
         next(err);
@@ -110,7 +110,7 @@ module.exports.dislikeItemById = (req, res, next) => {
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError("Data not found"));
-      } else if (err.name === "CastError") {
+      } else if (err.name === "CastError" || err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else {
         next(err);
