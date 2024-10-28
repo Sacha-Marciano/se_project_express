@@ -1,6 +1,8 @@
 # WTWR (What to Wear?): Back End
 
-This is the back-end to the WTWR app. It is the server that will handle requests from the front end regarding users and cards data. The server is connected to a database were all the information is stored
+This is the back-end to the WTWR app. It is the server that will handle requests from the front end regarding users and cards data. The server is connected to a database were all the information is stored.
+Website link: https://watowear.jumpingcrab.com
+Front-end repo: https://github.com/Sacha-Marciano/se_project_react
 
 ## Technical description
 
@@ -26,6 +28,24 @@ DEFAULT: all unknown routes or endpoint will end in a 404 response
 
 From new to old:
 
+- v3.2.4 Fix after failed GitHub Actions
+- v3.2.3 Fix after failed GitHub Actions
+- v3.2.2 Fix login validation bug
+- v3.2.1 Fix after failed GitHub Actions
+- v3.2.0 Implement requests and error logger
+- v3.1.0 Implement validation middleware
+- v3.0.0 Implement general error handling
+- v2.5.0 Adjust for Front-end queries
+- v2.4.1 Fix after GitHub Actions
+- v2.4.0 Fix after review
+- v2.3.1 Fix after GitHub Actions tests
+- v2.3.0 Pass Postman tests successfully
+- v2.2.1 Create update profile controller and route to it
+- v2.2.0 Authenticate user via JWT
+- v2.1.1 Route new controllers
+- v2.1.0 create login controller
+- v2.0.1 Implement user creation with email and password for
+- v2.0.0 Implement mail and password to User schema
 - v1.2.0: Fix after review, update README
 - v1.1.0: Fix after checklist, comment code with explanations
 - v1.0.2: Fix response object, send data directly instead of inside a JSON object

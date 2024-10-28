@@ -18,6 +18,11 @@ const {
 } = require("../middlewares/validation");
 
 // For known endpoints
+router.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 router.post("/signin", validateLogin, login);
 router.post("/signup", validateCreateUser, createUser);
 router.use("/items", clothingItemsRouter);
