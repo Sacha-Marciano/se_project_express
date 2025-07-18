@@ -1,69 +1,162 @@
-# WTWR (What to Wear?): Back End
+# WTWR (What to Wear?): Backend API
 
-This is the back-end to the WTWR app. It is the server that will handle requests from the front end regarding users and cards data. The server is connected to a database were all the information is stored.
-Website link: https://watowear.jumpingcrab.com
-Front-end repo: https://github.com/Sacha-Marciano/se_project_react
+This repository contains the backend server for the WTWR (What to Wear?) application. The backend is responsible for handling user authentication, clothing item management, and secure data storage using MongoDB. It is built with Node.js, Express, and Mongoose, and follows best practices for validation, error handling, and logging.
 
-## Technical description
+- **Live site:** https://watowear.jumpingcrab.com
+- **Frontend repo:** https://github.com/Sacha-Marciano/se_project_react
 
-This code uses express npm package to create a server which by default listen to port 3001. It connectcs to a MongoDB database via the mongoose npm package and uses the cors npm package to allow domains origins.
-The logic of the app is simple : listen to requests sent to server, check if the request match the conditions of routes, endpoints and models (default responses to unknown routes implemented), and sends a response based on the request. The app can read, modify or delete data in the database.
+---
 
-## Handled requests
+## Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [API Endpoints](#api-endpoints)
+  - [Authentication](#authentication)
+  - [Users](#users)
+  - [Clothing Items](#clothing-items)
+- [Validation](#validation)
+- [Error Handling](#error-handling)
+- [Logging](#logging)
+- [Setup & Installation](#setup--installation)
+- [Environment Variables](#environment-variables)
+- [Development Scripts](#development-scripts)
+- [Contributing](#contributing)
 
-- GET /users: Returns all users list
-- GET /users/:userID: Returns specific user depending on ID
-- POST /users: Create a user and add it to db. Returns user and user's ID
+---
 
-- GET /items: Return all items list
-- POST /items:Create an item and add it to db. Returns item and item's ID
-- DELETE /items/:itemId: Delete specific item from db depending on ID
+## Features
+- User registration and login with JWT authentication
+- Secure password hashing (bcrypt)
+- CRUD operations for clothing items
+- Like/dislike functionality for items
+- Input validation using Celebrate/Joi
+- Centralized error handling and logging (Winston)
+- MongoDB data storage via Mongoose
 
-- PUT /items/:itemId: Add user's ID to likes array of item depending on ID only once
-- DELETE /items/:itemId: Delete user's ID to likes array of item depending on ID only if it exists
+## Tech Stack
+- Node.js
+- Express.js
+- MongoDB & Mongoose
+- JWT (jsonwebtoken)
+- bcryptjs
+- Celebrate/Joi (validation)
+- Winston & express-winston (logging)
+- dotenv (environment variables)
 
-DEFAULT: all unknown routes or endpoint will end in a 404 response
+---
 
-## Updates
+## API Endpoints
 
-From new to old:
+### Authentication
+| Method | Endpoint     | Description                | Auth Required |
+|--------|-------------|----------------------------|:-------------:|
+| POST   | /signup     | Register a new user        |      No       |
+| POST   | /signin     | Login and get JWT token    |      No       |
 
-- v3.2.4 Fix after failed GitHub Actions
-- v3.2.3 Fix after failed GitHub Actions
-- v3.2.2 Fix login validation bug
-- v3.2.1 Fix after failed GitHub Actions
-- v3.2.0 Implement requests and error logger
-- v3.1.0 Implement validation middleware
-- v3.0.0 Implement general error handling
-- v2.5.0 Adjust for Front-end queries
-- v2.4.1 Fix after GitHub Actions
-- v2.4.0 Fix after review
-- v2.3.1 Fix after GitHub Actions tests
-- v2.3.0 Pass Postman tests successfully
-- v2.2.1 Create update profile controller and route to it
-- v2.2.0 Authenticate user via JWT
-- v2.1.1 Route new controllers
-- v2.1.0 create login controller
-- v2.0.1 Implement user creation with email and password for
-- v2.0.0 Implement mail and password to User schema
-- v1.2.0: Fix after review, update README
-- v1.1.0: Fix after checklist, comment code with explanations
-- v1.0.2: Fix response object, send data directly instead of inside a JSON object
-- v1.0.1: Fix GitHub actions failures
-- v1.0.0: Create server using express and connects it to MongoDB via mongoose. Route known routes to righ endpoints, implement default server responses
-- Initial commit: Clone repo to local machine
+### Users
+| Method | Endpoint     | Description                        | Auth Required |
+|--------|-------------|------------------------------------|:-------------:|
+| GET    | /users/me   | Get current user profile           |     Yes       |
+| PATCH  | /users/me   | Update current user profile        |     Yes       |
 
-## Running the Project
+### Clothing Items
+| Method | Endpoint             | Description                                 | Auth Required |
+|--------|---------------------|---------------------------------------------|:-------------:|
+| GET    | /items              | Get all clothing items                      |      No       |
+| POST   | /items              | Create a new clothing item                  |     Yes       |
+| DELETE | /items/:itemId      | Delete a clothing item (owner only)         |     Yes       |
+| PUT    | /items/:itemId/likes    | Like a clothing item                      |     Yes       |
+| DELETE | /items/:itemId/likes    | Remove like from a clothing item           |     Yes       |
 
-`npm run start` — to launch the server
+> **Note:** All authenticated routes require an `Authorization: Bearer <token>` header.
 
-`npm run dev` — to launch the server with the hot reload feature
+---
 
-### Testing
+## Validation
+All incoming data is validated using [Celebrate](https://github.com/arb/celebrate) and Joi schemas:
+- **User registration & update:**
+  - `name`: string, 2-30 chars, required
+  - `avatar`: valid URL, required
+  - `email`: valid email, required
+  - `password`: string, required
+- **Login:**
+  - `email`: valid email, required
+  - `password`: string, required
+- **Clothing item creation:**
+  - `name`: string, 2-30 chars, required
+  - `imageUrl`: valid URL, required
+  - `weather`: one of `hot`, `warm`, `cold`, required
+- **IDs:**
+  - `itemId`: 24-character hex string (MongoDB ObjectId)
 
-All Postman and GitHub Actions tests were successfully passed
+---
 
-### Later Upgrades
+## Error Handling
+- Centralized error handler returns JSON with a `message` and appropriate HTTP status code.
+- Custom error classes for 400, 401, 403, 404, and 409 errors.
+- Celebrate validation errors are handled and returned as 400 Bad Request.
+- All unknown routes return a 404 Not Found error.
 
-- Implement user's authentification
-- Connect to front-end
+---
+
+## Logging
+- All requests are logged to `request.log` (and console in development) using Winston.
+- All errors are logged to `error.log`.
+
+---
+
+## Setup & Installation
+1. **Clone the repository:**
+   ```bash
+   git clone <repo-url>
+   cd se_project_express(mine)
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Configure environment variables:**
+   - Copy `.env.example` to `.env` and set your variables (see below).
+4. **Start MongoDB:**
+   - Ensure MongoDB is running locally on `mongodb://127.0.0.1:27017/wtwr_db` or update the connection string in `app.js`.
+5. **Run the server:**
+   ```bash
+   npm run start
+   # or for development with hot reload:
+   npm run dev
+   ```
+
+---
+
+## Environment Variables
+Create a `.env` file in the root directory with the following (example):
+```
+PORT=3001
+JWT_SECRET=your_jwt_secret
+NODE_ENV=development
+```
+
+---
+
+## Development Scripts
+- `npm run start` — Start the server
+- `npm run dev` — Start the server with hot reload (nodemon)
+- `npm run lint` — Run ESLint
+
+---
+
+## Contributing
+Pull requests and issues are welcome! Please:
+- Follow the existing code style (see ESLint/Prettier configs)
+- Write clear commit messages
+- Add tests for new features if possible
+
+---
+
+## License
+ISC
+
+---
+
+## Author
+[Sacha_M_Marciano](https://github.com/Sacha-Marciano)
